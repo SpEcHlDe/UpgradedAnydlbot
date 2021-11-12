@@ -9,3 +9,5 @@ pyrogram==0.12.0
 ffmpeg-python
 numpy
 yt-dlp
+ffmpeg
+avconv
