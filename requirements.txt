@@ -10,4 +10,3 @@ ffmpeg-python
 numpy
 yt-dlp
 ffmpeg
-avconv
