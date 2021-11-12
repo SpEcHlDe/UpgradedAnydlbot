@@ -10,3 +10,4 @@ ffmpeg-python
 numpy
 yt-dlp
 ffmpeg
+yt-dl
