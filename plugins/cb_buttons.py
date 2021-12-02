@@ -94,7 +94,7 @@ def button(bot, update):
                         start_time
                     )
                 )
-                i = i + 1
+                i += 1
                 os.remove(current_file_name)
             try:
                 shutil.rmtree(extract_dir_path)
@@ -213,7 +213,7 @@ def button(bot, update):
         )
         description = Translation.CUSTOM_CAPTION_UL_FILE
         if "fulltitle" in response_json:
-            description = response_json["fulltitle"][0:1021]
+            description = response_json["fulltitle"][:1021]
         if ("@" in custom_file_name) and (str(update.from_user.id) not in Config.UTUBE_BOT_USERS):
             bot.edit_message_text(
                 chat_id=update.message.chat.id,
@@ -323,16 +323,13 @@ def button(bot, update):
                 duration = 0
                 if tg_send_type != "file":
                     metadata = extractMetadata(createParser(download_directory))
-                    if metadata is not None:
-                        if metadata.has("duration"):
-                            duration = metadata.get('duration').seconds
+                    if metadata is not None and metadata.has("duration"):
+                        duration = metadata.get('duration').seconds
                 # get the correct width, height, and duration for videos greater than 10MB
                 if os.path.exists(thumb_image_path):
-                    width = 0
                     height = 0
                     metadata = extractMetadata(createParser(thumb_image_path))
-                    if metadata.has("width"):
-                        width = metadata.get("width")
+                    width = metadata.get("width") if metadata.has("width") else 0
                     if metadata.has("height"):
                         height = metadata.get("height")
                     if tg_send_type == "vm":
@@ -347,7 +344,7 @@ def button(bot, update):
                     # img.thumbnail((90, 90))
                     img.resize((90, height))
                     img.save(thumb_image_path, "JPEG")
-                    # https://pillow.readthedocs.io/en/3.1.x/reference/Image.html#create-thumbnails
+                                    # https://pillow.readthedocs.io/en/3.1.x/reference/Image.html#create-thumbnails
                 else:
                     thumb_image_path = None
                 start_time = time.time()

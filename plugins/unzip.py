@@ -108,8 +108,7 @@ def unzip(bot, update):
                 os.remove(saved_file_path)
                 inline_keyboard = []
                 zip_file_contents = os.listdir(extract_dir_path)
-                i = 0
-                for current_file in zip_file_contents:
+                for i, current_file in enumerate(zip_file_contents):
                     cb_string = "ZIP:{}:ZIP".format(str(i))
                     inline_keyboard.append([
                         pyrogram.InlineKeyboardButton(
@@ -117,7 +116,6 @@ def unzip(bot, update):
                             callback_data=cb_string.encode("UTF-8")
                         )
                     ])
-                    i = i + 1
                 cb_string = "ZIP:{}:ZIP".format("ALL")
                 inline_keyboard.append([
                     pyrogram.InlineKeyboardButton(

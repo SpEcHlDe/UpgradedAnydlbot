@@ -111,9 +111,7 @@ def echo(bot, update):
                 json.dump(response_json, outfile, ensure_ascii=False)
             # logger.info(response_json)
             inline_keyboard = []
-            duration = None
-            if "duration" in response_json:
-                duration = response_json["duration"]
+            duration = response_json["duration"] if "duration" in response_json else None
             if "formats" in response_json:
                 for formats in response_json["formats"]:
                     format_id = formats.get("format_id")
@@ -128,7 +126,10 @@ def echo(bot, update):
                         "video", format_id, format_ext)
                     cb_string_file = "{}|{}|{}".format(
                         "file", format_id, format_ext)
-                    if format_string is not None and not "audio only" in format_string:
+                    if (
+                        format_string is not None
+                        and "audio only" not in format_string
+                    ):
                         ikeyboard = [
                             pyrogram.InlineKeyboardButton(
                                 "S" + format_ext + "Video [" + format_string +
@@ -189,9 +190,7 @@ def echo(bot, update):
             else:
                 format_id = response_json["format_id"]
                 format_ext = response_json["ext"]
-                tg_send_type = "file"
-                if duration is not None:
-                    tg_send_type = "video"
+                tg_send_type = "video" if duration is not None else "file"
                 cb_string = "{}|{}|{}".format(
                     tg_send_type, format_id, format_ext)
                 inline_keyboard.append([
@@ -202,10 +201,12 @@ def echo(bot, update):
             # logger.info(reply_markup)
             thumbnail = Config.DEF_THUMB_NAIL_VID_S
             thumbnail_image = Config.DEF_THUMB_NAIL_VID_S
-            if "thumbnail" in response_json:
-                if response_json["thumbnail"] is not None:
-                    thumbnail = response_json["thumbnail"]
-                    thumbnail_image = response_json["thumbnail"]
+            if (
+                "thumbnail" in response_json
+                and response_json["thumbnail"] is not None
+            ):
+                thumbnail = response_json["thumbnail"]
+                thumbnail_image = response_json["thumbnail"]
             thumb_image_path = DownLoadFile(
                 thumbnail_image,
                 Config.DOWNLOAD_LOCATION + "/" +
@@ -295,7 +296,7 @@ def button(bot, update):
     )
     description = Translation.CUSTOM_CAPTION_UL_FILE
     if "fulltitle" in response_json:
-        description = response_json["fulltitle"][0:1021]
+        description = response_json["fulltitle"][:1021]
     if ("@" in custom_file_name) and (str(update.from_user.id) not in Config.UTUBE_BOT_USERS):
         bot.edit_message_text(
             chat_id=update.message.chat.id,
@@ -376,13 +377,9 @@ def button(bot, update):
                     duration = metadata.get('duration').seconds
             # get the correct width, height, and duration for videos greater than 10MB
             if os.path.exists(thumb_image_path):
-                width = 0
-                height = 0
                 metadata = extractMetadata(createParser(thumb_image_path))
-                if metadata.has("width"):
-                    width = metadata.get("width")
-                if metadata.has("height"):
-                    height = metadata.get("height")
+                width = metadata.get("width") if metadata.has("width") else 0
+                height = metadata.get("height") if metadata.has("height") else 0
                 # resize image
                 # ref: https://t.me/PyrogramChat/44663
                 # https://stackoverflow.com/a/21669827/4723940
@@ -392,7 +389,7 @@ def button(bot, update):
                 # https://stackoverflow.com/a/37631799/4723940
                 img.thumbnail((300, 300))
                 img.save(thumb_image_path, "JPEG")
-                # https://pillow.readthedocs.io/en/3.1.x/reference/Image.html#create-thumbnails
+                            # https://pillow.readthedocs.io/en/3.1.x/reference/Image.html#create-thumbnails
             else:
                 thumb_image_path = None
             # try to upload file

@@ -165,9 +165,7 @@ def storage_info(bot, update):
     saved_file_path = Config.DOWNLOAD_LOCATION + "/" + str(update.from_user.id) + ".FFMpegRoBot.mkv"
     if os.path.exists(saved_file_path):
         metadata = extractMetadata(createParser(saved_file_path))
-        duration = None
-        if metadata.has("duration"):
-            duration = metadata.get('duration')
+        duration = metadata.get('duration') if metadata.has("duration") else None
         bot.send_message(
             chat_id=update.chat.id,
             text=Translation.FF_MPEG_RO_BOT_STOR_AGE_INFO.format(duration),

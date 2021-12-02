@@ -1,6 +1,8 @@
 import os
 
-class Config(object):
+
+
+class Config((object)):
     # get a token from https://chatbase.com
     CHAT_BASE_TOKEN = os.environ.get("CHAT_BASE_TOKEN", "")
     # get a token from @BotFather
@@ -10,13 +12,25 @@ class Config(object):
     API_HASH = os.environ.get("API_HASH")
     # Get these values from my.telegram.org
     # Array to store users who are authorized to use the bot
-    AUTH_USERS = set(str(x) for x in os.environ.get("AUTH_USERS", "").split())
+    AUTH_USERS = {str(x) for x in os.environ.get("AUTH_USERS", "").split()}
     # reg: Procedures
-    UTUBE_BOT_USERS =  set(str(x) for x in os.environ.get("UTUBE_BOT_USERS", "").split())
-    SUPER_DLBOT_USERS =  set(str(x) for x in os.environ.get("SUPER_DLBOT_USERS", "").split())
-    SUPER3X_DLBOT_USERS =  set(str(x) for x in os.environ.get("SUPER3X_DLBOT_USERS", "").split())
-    SUPER7X_DLBOT_USERS =  set(str(x) for x in os.environ.get("SUPER7X_DLBOT_USERS", "").split())
-    BANNED_USERS =  set(str(x) for x in os.environ.get("BANNED_USERS", "").split())
+    UTUBE_BOT_USERS = {
+        str(x) for x in os.environ.get("UTUBE_BOT_USERS", "").split()
+    }
+
+    SUPER_DLBOT_USERS = {
+        str(x) for x in os.environ.get("SUPER_DLBOT_USERS", "").split()
+    }
+
+    SUPER3X_DLBOT_USERS = {
+        str(x) for x in os.environ.get("SUPER3X_DLBOT_USERS", "").split()
+    }
+
+    SUPER7X_DLBOT_USERS = {
+        str(x) for x in os.environ.get("SUPER7X_DLBOT_USERS", "").split()
+    }
+
+    BANNED_USERS = {str(x) for x in os.environ.get("BANNED_USERS", "").split()}
     # Wat was I thinking? :\
     # the download location, where the HTTP Server runs
     DOWNLOAD_LOCATION = "./DOWNLOADS"

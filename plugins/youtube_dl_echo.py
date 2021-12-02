@@ -143,9 +143,7 @@ def echo(bot, update):
             json.dump(response_json, outfile, ensure_ascii=False)
         # logger.info(response_json)
         inline_keyboard = []
-        duration = None
-        if "duration" in response_json:
-            duration = response_json["duration"]
+        duration = response_json["duration"] if "duration" in response_json else None
         if "formats" in response_json:
             for formats in response_json["formats"]:
                 format_id = formats.get("format_id")
@@ -160,7 +158,10 @@ def echo(bot, update):
                     "video", format_id, format_ext)
                 cb_string_file = "{}|{}|{}".format(
                     "file", format_id, format_ext)
-                if format_string is not None and not "audio only" in format_string:
+                if (
+                    format_string is not None
+                    and "audio only" not in format_string
+                ):
                     ikeyboard = [
                         pyrogram.InlineKeyboardButton(
                             "S" + format_ext  + "Video [" + format_string +
@@ -236,10 +237,12 @@ def echo(bot, update):
         # logger.info(reply_markup)
         thumbnail = Config.DEF_THUMB_NAIL_VID_S
         thumbnail_image = Config.DEF_THUMB_NAIL_VID_S
-        if "thumbnail" in response_json:
-            if response_json["thumbnail"] is not None:
-                thumbnail = response_json["thumbnail"]
-                thumbnail_image = response_json["thumbnail"]
+        if (
+            "thumbnail" in response_json
+            and response_json["thumbnail"] is not None
+        ):
+            thumbnail = response_json["thumbnail"]
+            thumbnail_image = response_json["thumbnail"]
         thumb_image_path = DownLoadFile(
             thumbnail_image,
             Config.DOWNLOAD_LOCATION + "/" +
